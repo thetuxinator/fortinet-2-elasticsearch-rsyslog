@@ -30,11 +30,25 @@ The main differences would be
 
 The real reason behind is that we use FortiDragon on our day to day operations for threat hunting, so updates and constant evolution is more fluid.
 
-If you can handle the hassle of logstash installation, it is worth the effort.
-
 ## TL;DR
 
 Let's get this party on!!! 🤩
+
+### Prerequisites
+- Working Rsyslog-Server
+- Elastic-Search Instance
+- Kibana Instance
+
+### On Rsyslog-Server
+1. Create a Rsyslog-Rule that catches the Fortiweb/Fortigate Logs, in our case the config looks like this:
+
+$template remote-incoming-logs,"/var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log"
+
+if not ($fromhost contains "monitor1" ) then ?remote-incoming-logs
+& ~
+else
+
+"monitor1" is our rsyslog servers name, so all incoming logs that don't match its name are written in to /var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log which in case of fortiweb results in a file like /var/log/remotelogs/fortiweb_ip/filename
 
 ### On Fortigate
 
@@ -43,7 +57,7 @@ Let's get this party on!!! 🤩
 ```
     config log syslogd setting
         set status enable
-        set server "logstash_IP"
+        set server "rsyslog-server-ip"
         set port 5140
     end
 ```
