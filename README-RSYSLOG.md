@@ -173,33 +173,7 @@ PUT _component_template/ecs-base
 
 6. Enable dashboard controls: Go to Management --> Kibana Advanced Settings --> Presentation Labs --> Enable dashboard controls
 
-### On Logstash
 
-1. [Install Logstash](https://www.elastic.co/guide/en/logstash/current/installing-logstash.html)
-
-2. A good idea would be to setup your ES password as a [secret](https://www.elastic.co/guide/en/logstash/current/keystore.html#add-keys-to-keystore)
-
-3. Logstash Hostname **OPTIONAL**
-
-Add HOSTNAME="myhostname" to /etc/default/logstash when running logstash as a service
-
-```
-echo $HOSTNAME | tee  -a /etc/default/logstash
-```
-
-It is very useful if you run several logstash instances.
-
-4. Install tld filter plugin
-```
-    cd /usr/share/logstash
-    sudo bin/logstash-plugin install logstash-filter-tld
-```
-5. Copy [pipelines.yml](https://github.com/enotspe/fortinet-2-elasticsearch/blob/master/logstash/pipelines.yml) to your logstash folder.
-6. Copy [conf.d](https://github.com/enotspe/fortinet-2-elasticsearch/tree/master/logstash/conf.d) content to your conf.d folder.
-7. [Disable ECS Compatibility](). (FrotiDragon pipelines were created back on logstash v7, so some filters might be incompatible with how renames expect source fields names. It should be fixed soon).
-8. [Start logstash](https://www.elastic.co/guide/en/logstash/current/running-logstash.html)
-
-Hopefully you should be enjoying your logs by now. 🕺💃
 
 ## Pipelines sequence
 
