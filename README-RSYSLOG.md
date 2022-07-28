@@ -42,11 +42,11 @@ Let's get this party on!!! 🤩
 ### On Rsyslog-Server
 1. Create a Rsyslog-Rule that catches the Fortiweb/Fortigate Logs, in our case the config looks like this:
 
-$template remote-incoming-logs,"/var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log"
+> $template remote-incoming-logs,"/var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log"
 
-if not ($fromhost contains "monitor1" ) then ?remote-incoming-logs
-& ~
-else
+>if not ($fromhost contains "monitor1" ) then ?remote-incoming-logs
+>& ~
+>else
 
 "monitor1" is our rsyslog servers name, so all incoming logs that don't match its name are written in to /var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log which in case of fortiweb results in a file like /var/log/remotelogs/fortiweb_ip/filename
 
