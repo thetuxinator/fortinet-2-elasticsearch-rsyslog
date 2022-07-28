@@ -51,6 +51,7 @@ else
 
 "monitor1" is our rsyslog servers name, so all incoming logs that don't match its name are written in to /var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log which in case of fortiweb results in a file like /var/log/remotelogs/fortiweb_ip/filename
 
+### omelasticsearch
 
 Install omelasticsearch https://www.rsyslog.com/doc/v8-stable/configuration/modules/omelasticsearch.html
 on Ubuntu the package is called rsyslog-elasticsearch so install it using apt:
@@ -58,7 +59,8 @@ on Ubuntu the package is called rsyslog-elasticsearch so install it using apt:
 ```
 apt install rsyslog-elasticsearch
 ```
-add a rsyslog rule like this:
+
+add a rsyslog rule for omelasticsearch like this
 
 ```
 template(name="plain-syslog" type="list" option.json="on") {
