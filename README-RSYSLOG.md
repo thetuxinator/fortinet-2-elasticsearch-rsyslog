@@ -83,12 +83,7 @@ action(type="omelasticsearch"
 #  bulkmode="on"
   errorfile="/var/log/omelasticsearch.log")
 
-#devname=fortiweb1
-#89.145.165.183
 
-#if  ($fromhost contains "89.145.165.183" ) then ?logstash-index
-#& ~
-#else
 ```
 
 ### On Fortigate
