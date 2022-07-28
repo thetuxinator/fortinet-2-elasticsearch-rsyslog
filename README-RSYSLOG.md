@@ -49,15 +49,47 @@ if not ($fromhost contains "monitor1" ) then ?remote-incoming-logs
 else
 ```
 
+"monitor1" is our rsyslog servers name, so all incoming logs that don't match its name are written in to /var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log which in case of fortiweb results in a file like /var/log/remotelogs/fortiweb_ip/filename
+
+
 Install omelasticsearch https://www.rsyslog.com/doc/v8-stable/configuration/modules/omelasticsearch.html
 on Ubuntu the package is called rsyslog-elasticsearch so install it using apt:
 
 ```
 apt install rsyslog-elasticsearch
 ```
+add a rsyslog rule like this:
 
+```
+template(name="plain-syslog" type="list" option.json="on") {
+    constant(value="{")
+    constant(value="\"@timestamp\":\"")     property(name="timereported" dateFormat="rfc3339")
+    constant(value="\",\"host\":\"")        property(name="hostname")
+    constant(value="\",\"severity-num\":")  property(name="syslogseverity")
+    constant(value=",\"facility-num\":")    property(name="syslogfacility")
+    constant(value=",\"severity\":\"")      property(name="syslogseverity-text")
+    constant(value="\",\"facility\":\"")    property(name="syslogfacility-text")
+    constant(value="\",\"syslogtag\":\"")   property(name="syslogtag")
+    constant(value="\",\"message\":\"")     property(name="msg")
+    constant(value="\"}")
+}
 
-"monitor1" is our rsyslog servers name, so all incoming logs that don't match its name are written in to /var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log which in case of fortiweb results in a file like /var/log/remotelogs/fortiweb_ip/filename
+template(name="logstash-index" type="string" string="logstash-%$YEAR%.%$MONTH%.%$DAY%")
+
+action(type="omelasticsearch"
+  template="plain-syslog"
+  searchIndex="logstash-index"
+  dynSearchIndex="on"
+#  bulkmode="on"
+  errorfile="/var/log/omelasticsearch.log")
+
+#devname=fortiweb1
+#89.145.165.183
+
+#if  ($fromhost contains "89.145.165.183" ) then ?logstash-index
+#& ~
+#else
+```
 
 ### On Fortigate
 
