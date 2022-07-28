@@ -49,6 +49,13 @@ if not ($fromhost contains "monitor1" ) then ?remote-incoming-logs
 else
 ```
 
+Install omelasticsearch https://www.rsyslog.com/doc/v8-stable/configuration/modules/omelasticsearch.html
+on Ubuntu the package is called rsyslog-elasticsearch so install it using apt:
+
+'''
+apt install rsyslog-elasticsearch
+'''
+
 "monitor1" is our rsyslog servers name, so all incoming logs that don't match its name are written in to /var/log/remotelogs/%HOSTNAME%/%PROGRAMNAME%.log which in case of fortiweb results in a file like /var/log/remotelogs/fortiweb_ip/filename
 
 ### On Fortigate
