@@ -83,8 +83,7 @@ template(name="json-syslog"
 }
 
 # this is where we actually send the logs to Elasticsearch (localhost:9200 by default)
-#temp disabled to not fill up disk
-#action(type="omelasticsearch" template="json-syslog" searchIndex="logs-fortinet.fortigate" dynSearchIndex="on" server="127.0.0.1:9200" errorFile="/var/log/omelasticsearchmoduleerror.log" action.resumeretrycount="-1" )
+action(type="omelasticsearch" template="json-syslog" searchIndex="logs-fortinet.fortigate" dynSearchIndex="on" server="127.0.0.1:9200" errorFile="/var/log/omelasticsearchmoduleerror.log" action.resumeretrycount="-1" )
 ```
 
 ### On Fortigate
