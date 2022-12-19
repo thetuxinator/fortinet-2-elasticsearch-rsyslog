@@ -62,30 +62,29 @@ apt install rsyslog-elasticsearch
 
 add a rsyslog rule for omelasticsearch like this
 
-```
-template(name="plain-syslog" type="list" option.json="on") {
+```#try to parse a structured log
+action(type="mmjsonparse")
+
+# this is for index names to be like: rsyslog-YYYY.MM.DD
+template(name="logstash-index" type="string" string="rsyslog-%$YEAR%.%$MONTH%.%$DAY%")
+
+# this is for formatting our syslog in JSON with @timestamp
+template(name="json-syslog"
+  type="list") {
     constant(value="{")
-    constant(value="\"@timestamp\":\"")     property(name="timereported" dateFormat="rfc3339")
-    constant(value="\",\"host\":\"")        property(name="hostname")
-    constant(value="\",\"severity-num\":")  property(name="syslogseverity")
-    constant(value=",\"facility-num\":")    property(name="syslogfacility")
-    constant(value=",\"severity\":\"")      property(name="syslogseverity-text")
-    constant(value="\",\"facility\":\"")    property(name="syslogfacility-text")
-    constant(value="\",\"syslogtag\":\"")   property(name="syslogtag")
-    constant(value="\",\"message\":\"")     property(name="msg")
+      constant(value="\"timestamp\":\"")     property(name="timereported" dateFormat="rfc3339")
+      constant(value="\",\"host\":\"")        property(name="hostname")
+      constant(value="\",\"severity\":\"")    property(name="syslogseverity-text")
+      constant(value="\",\"facility\":\"")    property(name="syslogfacility-text")
+
+      constant(value="\",\"tag\":\"")   property(name="syslogtag" format="json")
+      constant(value="\",\"message\":\"")    property(name="msg" format="json")
     constant(value="\"}")
 }
 
-template(name="logstash-index" type="string" string="logstash-%$YEAR%.%$MONTH%.%$DAY%")
-
-action(type="omelasticsearch"
-  template="plain-syslog"
-  searchIndex="logstash-index"
-  dynSearchIndex="on"
-#  bulkmode="on"
-  errorfile="/var/log/omelasticsearch.log")
-
-
+# this is where we actually send the logs to Elasticsearch (localhost:9200 by default)
+#temp disabled to not fill up disk
+#action(type="omelasticsearch" template="json-syslog" searchIndex="logstash-index" dynSearchIndex="on" server="127.0.0.1:9200" errorFile="/var/log/omelasticsearchmoduleerror.log" action.resumeretrycount="-1" )
 ```
 
 ### On Fortigate
